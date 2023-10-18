@@ -1,38 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Counter from '../Components/Counter'
-import Quotes from '../Components/Quotes';
-
-import Login from '../Components/Login';
-import Signup from '../Components/SIgnup'
-import Navbar from '../Components/Navbar'
-  import { ToastContainer, toast } from 'react-toastify';
- 
-import Product from '../Components/Product'
+import Quote from "../Components/Quotes";
+import Login from "../pages/Login";
+import SignUp from "../pages/SIgnup";
+import { ToastContainer } from "react-toastify";
+import Product from "../pages/Products";
+import AddProductForm from "../Components/AddProduct";
+import SecureRoute from "./routes/SecureRoute";
 
 function App() {
-  
-
   return (
-     <>
-       
-      <Navbar/>
-    
+    <>
       <Routes>
-    <Route path="/counter" element={<Counter />} />
-    <Route path="/quotes" element={<Quotes />}/>
-    <Route path='/login' element={<Login/>}/>
-    <Route path='/signup' element={<Signup/>}/>
-    <Route path='/product' element={<Product/>}/>
-  </Routes>
- <ToastContainer />
-
- 
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="" element={<SecureRoute />}>
+          <Route path="/product" element={<Product />} />
+          <Route path="/quotes" element={<Quote />} />
+          <Route path="/product/add" element={<AddProductForm />} />
+        </Route>
+      </Routes>
+      <ToastContainer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

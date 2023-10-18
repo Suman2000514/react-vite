@@ -1,75 +1,67 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
-import axios from "axios";
+import React from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+} from "react-bootstrap";
 
-const Product = () => {
-  const [products, setProducts] = useState([]);
+import { returnDiscountAmount, returnTotal } from "../src/utils/helper";
 
-  async function getAllProducts() {
-    try {
-      const resp = await axios.get("https://dummyjson.com/products");
-      setProducts(resp.data.products);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  }
-
-  useEffect(() => {
-    getAllProducts();
-  }, []);
-
-  const deleteHandler = (e, id) => {
-    e.preventDefault();
-    const filteredProds = products.filter((prod) => prod.id !== id);
-    setProducts(filteredProds);
-  };
-
+const Product = ({ product, deleteHandler, editHandler, viewHandler }) => {
   return (
-    <>
-      <h3 className="text-center text-decoration-underline">Products</h3>
-      <div className="container">
-        {products.map((product) => (
-          <Card
-            className="card bg-black text-bg-dark"
-            style={{ height: 400, width: 400 }}
-            key={product.id}
-          >
-            <Card.Header className="h-50">
-              <Card.Img
-                className="h-100 w-100 m-0"
-                src={product.thumbnail}
-                alt="product"
-              />
-              <h4 className="text-center text-capitalize mt-1">
-                {product.title.length > 15
-                  ? product.title.slice(0, 14) + "..."
-                  : product.title}
-              </h4>
-            </Card.Header>
-
-            <Card.Body className="h-25 mt-3">
-              <div className="priceContainer">
-                <p>Price: ${product.price}</p>
-                <p>Discount: ${product.discountPercentage}%</p>
-              </div>
-
-              <p>{product.description.slice(0, 45) + "..."}</p>
-            </Card.Body>
-
-            <Card.Footer className="button">
-              <Button variant="primary">View</Button>
-              <Button variant="secondary">Edit</Button>
-              <Button
-                variant="danger"
-                onClick={(e) => deleteHandler(e, product.id)}
-              >
-                Delete
-              </Button>
-            </Card.Footer>
-          </Card>
-        ))}
-      </div>
-    </>
+    <Card
+      style={{
+        width: "20%",
+        height: "500px",
+        color: "whitesmoke",
+        backgroundColor: "black",
+        margin: "auto",
+      }}
+    >
+      <CardHeader style={{ height: "40%", width: "300px", margin: "auto" }}>
+        <Card.Img className="h-100" src={product.thumbnail}></Card.Img>
+      </CardHeader>
+      <CardBody style={{ display: "flex", flexDirection: "column" }}>
+        <h2 style={{ fontWeight: "bolder", textDecoration: "underline" }}>
+          {product.title.length > 10
+            ? product.title.slice(0, 9) + "..."
+            : product.title}
+        </h2>
+        <p style={{ color: "aqua" }}>
+          <b>SubTotal:</b>${product.price}
+        </p>
+        <p style={{ color: "goldenrod" }}>
+          <b>Discount(%):</b>${product.discountPercentage}%
+        </p>
+        <p style={{ color: "green" }}>
+          <b>Discount Amount:</b>${returnDiscountAmount(product)}
+        </p>
+        <p style={{ color: "red " }}>
+          <b>Total:</b>${returnTotal(product)}
+        </p>
+      </CardBody>
+      <CardFooter>
+        <Button
+          variant="primary"
+          className="me-3"
+          onClick={(e) => viewHandler(e, product.id)}
+        >
+          View
+        </Button>
+        <Button
+          variant="secondary"
+          className="me-3"
+          onClick={(e) => editHandler(e, product.id)}
+        >
+          Edit
+        </Button>
+        <Button variant="danger" onClick={(e) => deleteHandler(e, product.id)}>
+          Delete
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
